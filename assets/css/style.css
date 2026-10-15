@@ -61,3 +61,37 @@ code { background: #f0f0f0; padding: 2px 5px; border-radius: 4px; }
     .card { padding: 18px; }
     .skill-badge { flex: 1 1 45%; }
 }
+/* --- Custom Design Part 6 (Minimal Green Theme) --- */
+body {
+    background-color: #0f172a !important; /* เทาดำเข้มสไตล์อวกาศ */
+}
+h1, h2, h3 {
+    color: #166534 !important; /* สีหัวข้อเป็นสีเขียวเข้มอ่านง่าย */
+}
+
+.card {
+    border-radius: 12px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+    border-top: 4px solid #22c55e !important; /* แถบสีเขียวสว่างด้านบนการ์ด */
+}
+
+.skill-badge {
+    background: #dcfce7 !important; /* พื้นหลังป้าย Skill เขียวอ่อน */
+    border: 1px solid #86efac !important; /* ขอบป้ายเขียวอ่อน */
+    border-radius: 20px !important;
+    padding: 8px 16px !important;
+    color: #15803d !important; /* ตัวหนังสือสีเขียวกลาง */
+}
+.skill-badge {
+    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%) !important; /* สีน้ำเงิน-ม่วงเข้มห้วงอวกาศ */
+    border: 1px solid #6366f1 !important; /* ขอบสีม่วงนีออน */
+    border-radius: 20px !important;
+    padding: 8px 16px !important;
+    color: #ffffff !important; /* ตัวหนังสือชื่อ Skill สีขาวเด่น */
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.25) !important; /* แสงฟุ้งเบาๆ สไตล์นีออนอวกาศ */
+}
+
+/* ปรับสีตัวหนังสือบรรทัดล่าง (เช่น expert, good) ให้เป็นสีม่วงสว่างอ่านง่าย */
+.skill-badge span {
+    color: #c084fc !important; 
+}

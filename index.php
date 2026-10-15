@@ -19,26 +19,43 @@ if ($result) {
     }
 }
 
-// Lab answer key: retrieve skills and training records from MySQL.
+/*
+TODO FOR STUDENTS
+1. Create table: skill
+2. Create table: training
+3. Insert your own data in phpMyAdmin
+4. Write SQL SELECT statements below
+
+Suggested fields:
+- skill(id, profile_id, skill_name, skill_level)
+- training(id, profile_id, course_name, organization, training_year)
+*/
+
+// Example placeholder data before students connect their own tables.
+// Students should replace these arrays with data from MySQL.
 $skills = [];
-$stmt = mysqli_prepare($conn, 'SELECT skill_name, skill_level FROM skill WHERE profile_id = ? ORDER BY id');
-if ($stmt) {
-    $profileId = (int)($profile['id'] ?? 0);
-    mysqli_stmt_bind_param($stmt, 'i', $profileId);
-    mysqli_stmt_execute($stmt);
-    $result = mysqli_stmt_get_result($stmt);
-    while ($row = mysqli_fetch_assoc($result)) { $skills[] = $row; }
-    mysqli_stmt_close($stmt);
+if ($profile) {
+    $profile_id = intval($profile['id']);
+    $sql = "SELECT * FROM skill WHERE profile_id = $profile_id";
+    $result = mysqli_query($conn, $sql);
+    if ($result) {
+        while ($row = mysqli_fetch_assoc($result)) {
+            $skills[] = $row;
+            
+        }
+    }
 }
+
 $trainings = [];
-$stmt = mysqli_prepare($conn, 'SELECT course_name, organization, training_year FROM training WHERE profile_id = ? ORDER BY training_year DESC, id DESC');
-if ($stmt) {
-    $profileId = (int)($profile['id'] ?? 0);
-    mysqli_stmt_bind_param($stmt, 'i', $profileId);
-    mysqli_stmt_execute($stmt);
-    $result = mysqli_stmt_get_result($stmt);
-    while ($row = mysqli_fetch_assoc($result)) { $trainings[] = $row; }
-    mysqli_stmt_close($stmt);
+if ($profile) {
+    $profile_id = intval($profile['id']);
+    $sql = "SELECT * FROM training WHERE profile_id = $profile_id ORDER BY training_year DESC";
+    $result = mysqli_query($conn, $sql);
+    if ($result) {
+        while ($row = mysqli_fetch_assoc($result)) {
+            $trainings[] = $row;
+        }
+    }
 }
 ?>
 <!doctype html>
@@ -51,9 +68,8 @@ if ($stmt) {
 </head>
 <body>
 <div class="container">
-    <p><a href="skills.php" style="display:inline-block;padding:12px 18px;background:#135c9a;color:white;border-radius:10px;text-decoration:none">Manage Skills (CRUD Lab) →</a></p>
     <header class="hero card">
-        <img class="avatar" src="assets/images/<?php echo $profile ? htmlspecialchars($profile['photo']) : 'student.jpg'; ?>" alt="Profile Photo">
+        <img class="avatar" src="assets/images/<?php echo $profile ? htmlspecialchars($profile['photo']) : 'images (1)'; ?>" alt="Profile Photo">
         <div>
             <h1><?php echo $profile ? htmlspecialchars($profile['full_name']) : 'Your Name'; ?></h1>
             <p class="headline"><?php echo $profile ? htmlspecialchars($profile['headline']) : 'Student Resume Website'; ?></p>
@@ -95,7 +111,7 @@ if ($stmt) {
                 </div>
             <?php endforeach; ?>
         </div>
-        
+        <!-- <p class="note">Lab task: เปลี่ยนส่วนนี้ให้ดึงข้อมูลจากตาราง <code>skill</code> ใน MySQL</p> -->
     </section>
 
     <section class="card">
@@ -106,7 +122,7 @@ if ($stmt) {
                 <p><?php echo htmlspecialchars($training['organization']); ?>, <?php echo htmlspecialchars($training['training_year']); ?></p>
             </div>
         <?php endforeach; ?>
-        
+        <!-- <p class="note">Lab task: ออกแบบตาราง <code>training</code> แล้วแก้ PHP ให้ดึงข้อมูลจากฐานข้อมูล</p> -->
     </section>
 
     <footer>
