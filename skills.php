@@ -1,9 +1,14 @@
 <?php
-// ล็อกหน้านี้ทันทีด้วยการ require 'auth.php' ที่บรรทัดแรกสุด
-require_once 'auth.php';
-require_once 'config/db.php';
+// 1. ตรวจสอบสิทธิ์การเข้าใช้งาน (ถ้ายังไม่ล็อกอิน จะ Redirect ไป login.php อัตโนมัติ)
+require_once 'auth.php'; 
 
-// ดึงข้อมูล Skills ทั้งหมดออกมาแสดงผล
+// 2. เชื่อมต่อฐานข้อมูล
+require_once 'config/db.php'; 
+
+// 3. (Optional) ดึงไฟล์ธีม/การตกแต่งสไตล์เดิมมาใช้ หากต้องการ
+// require_once 'crud_bootstrap.php'; 
+
+// 4. ดึงข้อมูล Skills เฉพาะของ User ที่ล็อกอินอยู่จริงจาก Session
 $user_id = $_SESSION['user_id'] ?? null;
 $profile_id = $_SESSION['profile_id'] ?? null;
 
