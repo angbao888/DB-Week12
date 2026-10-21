@@ -1,13 +1,26 @@
 <?php
-// เริ่มต้นใช้งาน Session หากยังไม่มีการ start
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-/**
- * ฟังก์ชันตรวจสอบสถานะการเข้าสู่ระบบ (Authentication Check)
- * หากผู้ใช้ยังไม่ได้ล็อกอิน ให้เปลี่ยนหน้าไปยัง login.php ทันที
- */
+$timeout = 600; 
+
+if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > $timeout)) {
+    $_SESSION = array();
+    if (ini_get("session.use_cookies")) {
+        $params = session_get_cookie_params();
+        setcookie(session_name(), '', time() - 42000,
+            $params["path"], $params["domain"],
+            $params["secure"], $params["httponly"]
+        );
+    }
+    session_destroy();
+    header('Location: login.php?timeout=1');
+    exit;
+}
+
+$_SESSION['last_activity'] = time();
+
 function check_auth() {
     if (empty($_SESSION['user_id'])) {
         header('Location: login.php');
@@ -15,9 +28,6 @@ function check_auth() {
     }
 }
 
-/**
- * ฟังก์ชันสร้างและรับ Token ป้องกัน CSRF Attack
- */
 function auth_token() {
     if (empty($_SESSION['auth_csrf_token'])) {
         $_SESSION['auth_csrf_token'] = bin2hex(random_bytes(32));
@@ -25,9 +35,6 @@ function auth_token() {
     return $_SESSION['auth_csrf_token'];
 }
 
-/**
- * ฟังก์ชันตรวจสอบ Token CSRF จากแบบฟอร์ม POST
- */
 function check_auth_token() {
     $token = $_POST['auth_csrf'] ?? '';
     if (empty($token) || !hash_equals($_SESSION['auth_csrf_token'] ?? '', $token)) {
@@ -36,16 +43,12 @@ function check_auth_token() {
     }
 }
 
-/**
- * ฟังก์ชัน Escape ข้อความสำหรับแสดงผลปลอดภัย ป้องกัน XSS
- */
 function auth_escape($string) {
     return htmlspecialchars((string)$string, ENT_QUOTES, 'UTF-8');
 }
 
-// ตรวจสอบการล็อกอินอัตโนมัติเมื่อไฟล์นี้ถูกเรียกใช้ (ยกเว้นในหน้า login.php หรือ register.php)
 $current_page = basename($_SERVER['PHP_SELF']);
-if (!in_array($current_page, ['login.php', 'register.php'])) {
+if (!in_array($current_page, ['login.php', 'register.php', 'make_pass.php'])) {
     check_auth();
 }
 ?>
